@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads Account Stats</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+       * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            background-color: #1E1E1E;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            text-align: center;
+            color: #E0E0E0;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: #F1F1F1;
+            font-weight: 600;
+        }
+
+        .profile-info {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-info .profile {
+            text-align: center;
+            margin-right: 20px;
+        }
+
+        .profile-info .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #3E3E3E;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .metrics p {
+            font-size: 1.3rem;
+            margin: 12px 0;
+            font-weight: 500;
+        }
+
+        .chart-section {
+            margin-bottom: 35px;
+        }
+
+        .chart-section h2 {
+            font-size: 1.8rem;
+            color: #F1F1F1;
+            margin-bottom: 20px;
+        }
+
+        .cash-info p {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #00FF7F; /* Light green color for cash value */
+        }
+
+        footer {
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #8A8A8A;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: #FF79C6;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+        /* Add this to your existing styles.css */
+        .cash-info p {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #00FF7F; /* Light green color for cash value */
+            margin: 10px 0;
+        }
+
+        /* Total cash styling */
+        #totalCash {
+            color: #FFD700; /* Golden color for total cash */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nigel's Threads Account Stats</h1>
+        </header>
+
+        <section class="profile-info">
+            <div class="profile">
+                <img src="https://i.pinimg.com/736x/9d/63/ae/9d63ae8fc46133a1167e5116cef66a3d.jpg" alt="Profile Photo" class="profile-photo">
+                <p id="username">_n.i.g.e_l</p>
+            </div>
+
+            <div class="metrics">
+                <p id="followers">Followers: 0</p>
+                <p id="profile-visits">Profile Visits: 0</p>
+                <p id="follower-group">Follower Group: Under 1 Million</p>
+            </div>
+        </section>
+
+        <section class="chart-section">
+            <h2>Followers Growth</h2>
+            <canvas id="followersChart" width="400" height="200"></canvas>
+        </section>
+
+        <section class="cash-info">
+            <p>Cash per follower: $<span id="cashPerFollower">0.00</span></p>
+            <p>Total Cash: $<span id="totalCash">0.00</span></p>
+        </section>
+    </div>
+
+    <footer>
+        <p>Data provided by your Threads account. <a href="#">Learn more</a></p>
+    </footer>
+
+    <script>
+        // Initial values for followers and profile visits
+        let followers = 3000;
+        let profileVisits = 500;
+        let cashPerFollower = 0;
+        let totalCash = 0;
+        let followerHistory = [3505, 3499, 3500, 3502, 3501];
+
+        // Function to update stats
+        function updateStats() {
+            if (followers > 0) {
+                cashPerFollower = (Math.log(followers + 1) * 0.12).toFixed(2);
+                const rewardMultiplier = 1 + Math.random() * 0.2;
+                cashPerFollower = (cashPerFollower * rewardMultiplier).toFixed(2);
+                cashPerFollower = Math.min(cashPerFollower, 12);
+            } else {
+                cashPerFollower = 0;
+            }
+
+            totalCash = (followers * cashPerFollower).toFixed(2);
+
+            document.getElementById('followers').textContent = `Followers: ${followers}`;
+            document.getElementById('profile-visits').textContent = `Profile Visits: ${profileVisits}`;
+            document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
+            document.getElementById('totalCash').textContent = `$${totalCash}`;
+            document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
+
+            followerHistory.push(followers);
+
+            updateChart(followerHistory);
+        }
+
+        // Function to get the follower group
+        function getFollowerGroup(followers) {
+            let group = "Under 1 Million";
+            if (followers >= 1000000000) group = "Over 1 Billion";
+            else if (followers >= 500000000) group = "Under 1 Billion";
+            else if (followers >= 100000000) group = "Under 500 Million";
+            else if (followers >= 10000000) group = "Under 100 Million";
+            else if (followers >= 1000000) group = "Under 10 Million";
+            else if (followers >= 100000) group = "Under 1 Million";
+            return group;
+        }
+
+        // Setup the chart using Chart.js
+        const ctx = document.getElementById('followersChart').getContext('2d');
+        const followersChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Followers Growth',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Time (days)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Followers Count'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Update the chart with new data
+        function updateChart(followerHistory) {
+            followersChart.data.labels = Array.from({ length: followerHistory.length }, (_, index) => index + 1);
+            followersChart.data.datasets[0].data = followerHistory;
+            followersChart.update();
+        }
+
+        // Example usage
+        function setFollowers(newFollowers, newProfileVisits) {
+            followers = newFollowers;
+            profileVisits = newProfileVisits;
+            updateStats();
+        }
+
+        // Initial test
+        setFollowers(3524, 50700);  // Change this to whatever you want
+    </script>
+</body>
+</html>
+
+
+
+
