@@ -6,7 +6,7 @@
     <title>Threads Account Stats</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-       * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -22,10 +22,11 @@
             height: 100vh;
             flex-direction: column;
             overflow: hidden;
+            padding: 10px; /* Prevents small screens from cutting off content */
         }
 
         .container {
-            width: 80%;
+            width: 100%;
             max-width: 1000px;
             background-color: #1E1E1E;
             border-radius: 15px;
@@ -33,10 +34,11 @@
             padding: 30px;
             text-align: center;
             color: #E0E0E0;
+            margin-top: 20px;
         }
 
         header h1 {
-            font-size: 2.5rem;
+            font-size: 2rem; /* Use rem for scalability */
             margin-bottom: 25px;
             color: #F1F1F1;
             font-weight: 600;
@@ -47,11 +49,12 @@
             justify-content: space-evenly;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap; /* Allows stacking on small screens */
         }
 
         .profile-info .profile {
             text-align: center;
-            margin-right: 20px;
+            margin-bottom: 20px; /* Adds spacing for mobile */
         }
 
         .profile-info .profile-photo {
@@ -62,8 +65,9 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
+
         .metrics p {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             margin: 12px 0;
             font-weight: 500;
         }
@@ -73,15 +77,20 @@
         }
 
         .chart-section h2 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: #F1F1F1;
             margin-bottom: 20px;
         }
 
         .cash-info p {
-            font-size: 1.6rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            color: #00FF7F; /* Light green color for cash value */
+            color: #00FF7F;
+            margin: 10px 0;
+        }
+
+         #totalCash {
+            color: #FFD700;
         }
 
         footer {
@@ -99,17 +108,44 @@
         footer a:hover {
             text-decoration: underline;
         }
-        /* Add this to your existing styles.css */
-        .cash-info p {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #00FF7F; /* Light green color for cash value */
-            margin: 10px 0;
+        /* Media Queries for Mobile Screens */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem; /* Smaller header font size on mobile */
+            }
+
+            .profile-info {
+                flex-direction: column; /* Stack the profile and metrics sections */
+                align-items: center; /* Center-align on mobile */
+            }
+
+            .profile-info .profile {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .metrics p {
+                font-size: 1rem; /* Slightly smaller text on mobile */
+            }
+
+            .chart-section h2 {
+                font-size: 1.2rem; /* Smaller chart section title */
+            }
+
+            .cash-info p {
+                font-size: 1.1rem; /* Smaller cash info text */
+            }
         }
 
-        /* Total cash styling */
-        #totalCash {
-            color: #FFD700; /* Golden color for total cash */
+        @media (max-width: 480px) {
+            .profile-info .profile-photo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .container {
+                padding: 15px; /* Less padding on smaller screens */
+            }
         }
     </style>
 </head>
