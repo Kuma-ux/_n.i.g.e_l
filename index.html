@@ -183,128 +183,102 @@
         <p>Data provided by your Threads account. <a href="#">Learn more</a></p>
     </footer>
 
-     <script>
-    // Initial values for followers and profile visits
-    let followers = 3000;
-    let profileVisits = 500;
-    let cashPerFollower = 0;
-    let totalCash = 0;
-    let followerHistory = [3505, 3499, 3500, 3502, 3501]; // Initial history of follower count
+    <script>
+        // Initial values for followers and profile visits
+        let followers = 3000;
+        let profileVisits = 500;
+        let cashPerFollower = 0;
+        let totalCash = 0;
+        let followerHistory = [3505, 3499, 3500, 3502, 3501, 3524, 3527];
 
-    // Function to update stats
-    function updateStats() {
-        if (followers > 0) {
-            // Calculate the cashPerFollower value without randomness
-            let calculatedCashPerFollower = (Math.log(followers + 1) * 0.12).toFixed(2);
-            
-            // Store the calculated cashPerFollower value in localStorage (without randomness)
-            localStorage.setItem('cashPerFollower', calculatedCashPerFollower);
+        // Function to update stats
+        function updateStats() {
+            if (followers > 0) {
+                cashPerFollower = (Math.log(followers + 1) * 0.12).toFixed(2);
+                const rewardMultiplier = 1 + Math.random() * 0.2;
+                cashPerFollower = (cashPerFollower * rewardMultiplier).toFixed(2);
+                cashPerFollower = Math.min(cashPerFollower, 12);
+            } else {
+                cashPerFollower = 0;
+            }
 
-            cashPerFollower = calculatedCashPerFollower;
-        } else {
-            cashPerFollower = 0;
+            totalCash = (followers * cashPerFollower).toFixed(2);
+
+            document.getElementById('followers').textContent = Followers: ${followers};
+            document.getElementById('profile-visits').textContent = Profile Visits: ${profileVisits};
+            document.getElementById('cashPerFollower').textContent = $${cashPerFollower};
+            document.getElementById('totalCash').textContent = $${totalCash};
+            document.getElementById('follower-group').textContent = Follower Group: ${getFollowerGroup(followers)};
+
+            followerHistory.push(followers);
+
+            updateChart(followerHistory);
         }
 
-        totalCash = (followers * cashPerFollower).toFixed(2);
+        // Function to get the follower group
+        function getFollowerGroup(followers) {
+            let group = "Under 1 Million";
+            if (followers >= 1000000000) group = "Over 1 Billion";
+            else if (followers >= 500000000) group = "Under 1 Billion";
+            else if (followers >= 100000000) group = "Under 500 Million";
+            else if (followers >= 10000000) group = "Under 100 Million";
+            else if (followers >= 1000000) group = "Under 10 Million";
+            else if (followers >= 100000) group = "Under 1 Million";
+            return group;
+        }
 
-        document.getElementById('followers').textContent = `Followers: ${followers}`;
-        document.getElementById('profile-visits').textContent = `Profile Visits: ${profileVisits}`;
-        document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
-        document.getElementById('totalCash').textContent = `$${totalCash}`;
-        document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
-
-        followerHistory.push(followers);
-
-        updateChart(followerHistory);
-    }
-
-    // Function to get the follower group
-    function getFollowerGroup(followers) {
-        let group = "Under 1 Million";
-        if (followers >= 1000000000) group = "Over 1 Billion";
-        else if (followers >= 500000000) group = "Under 1 Billion";
-        else if (followers >= 100000000) group = "Under 500 Million";
-        else if (followers >= 10000000) group = "Under 100 Million";
-        else if (followers >= 1000000) group = "Under 10 Million";
-        else if (followers >= 100000) group = "Under 1 Million";
-        return group;
-    }
-
-    // Setup the chart using Chart.js
-    const ctx = document.getElementById('followersChart').getContext('2d');
-    const followersChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Followers Growth',
-                data: [],
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    type: 'linear',
-                    position: 'bottom',
-                    title: {
-                        display: true,
-                        text: 'Time (days)'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Followers Count'
+        // Setup the chart using Chart.js
+        const ctx = document.getElementById('followersChart').getContext('2d');
+        const followersChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Followers Growth',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Time (days)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Followers Count'
+                        }
                     }
                 }
             }
+        });
+
+        // Update the chart with new data
+        function updateChart(followerHistory) {
+            followersChart.data.labels = Array.from({ length: followerHistory.length }, (_, index) => index + 1);
+            followersChart.data.datasets[0].data = followerHistory;
+            followersChart.update();
         }
-    });
 
-    // Update the chart with new data
-    function updateChart(followerHistory) {
-        followersChart.data.labels = Array.from({ length: followerHistory.length }, (_, index) => index + 1);
-        followersChart.data.datasets[0].data = followerHistory;
-        followersChart.update();
-    }
-
-    // Function to set followers and profile visits manually
-    function setFollowers() {
-        const newFollowers = parseInt(document.getElementById('followersInput').value, 10);
-        const newProfileVisits = parseInt(document.getElementById('profileVisitsInput').value, 10);
-        
-        if (isNaN(newFollowers) || isNaN(newProfileVisits)) {
-            alert("Please enter valid numbers for followers and profile visits.");
-            return;
+        // Example usage
+        function setFollowers(newFollowers, newProfileVisits) {
+            followers = newFollowers;
+            profileVisits = newProfileVisits;
+            updateStats();
         }
-        
-        followers = newFollowers;
-        profileVisits = newProfileVisits;
-        
-        // Save these values to localStorage for persistence across sessions
-        localStorage.setItem('followers', followers);
-        localStorage.setItem('profileVisits', profileVisits);
-        
-        updateStats();
-    }
 
-    // Check if there's a stored cashPerFollower value in localStorage
-    if (localStorage.getItem('cashPerFollower')) {
-        // If we have a stored value, use it
-        cashPerFollower = localStorage.getItem('cashPerFollower');
-        // Assuming that followers should be fetched or set here (from saved or default value).
-        followers = localStorage.getItem('followers') || 3000;  // Default followers if none is saved
-        profileVisits = localStorage.getItem('profileVisits') || 500; // Default profileVisits if none is saved
-        updateStats();
-    } else {
-        // If there's no stored value, calculate it and store it
-        setFollowers(3524, 50700);  // Default test values (or you can remove this if you want)
-    }
-  </script>
+        // Initial test
+        setFollowers(3528, 50700);  // Change this to whatever you want
+    </script>
 </body>
 </html>
 
