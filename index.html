@@ -183,7 +183,7 @@
         <p>Data provided by your Threads account. <a href="#">Learn more</a></p>
     </footer>
 
-    <script>
+     <script>
     // Initial values for followers and profile visits
     let followers = 3000;
     let profileVisits = 500;
@@ -194,13 +194,10 @@
     // Function to update stats
     function updateStats() {
         if (followers > 0) {
-            // Calculate the cashPerFollower value
+            // Calculate the cashPerFollower value without randomness
             let calculatedCashPerFollower = (Math.log(followers + 1) * 0.12).toFixed(2);
-            const rewardMultiplier = 1 + Math.random() * 0.2;
-            calculatedCashPerFollower = (calculatedCashPerFollower * rewardMultiplier).toFixed(2);
-            calculatedCashPerFollower = Math.min(calculatedCashPerFollower, 12);
             
-            // Store the value in localStorage (for consistent access across devices)
+            // Store the calculated cashPerFollower value in localStorage (without randomness)
             localStorage.setItem('cashPerFollower', calculatedCashPerFollower);
 
             cashPerFollower = calculatedCashPerFollower;
@@ -284,17 +281,22 @@
 
     // Check if there's a stored cashPerFollower value in localStorage
     if (localStorage.getItem('cashPerFollower')) {
+        // If we have a stored value, use it
         cashPerFollower = localStorage.getItem('cashPerFollower');
         updateStats();
     } else {
+        // If there's no stored value, calculate it and store it
         setFollowers(3524, 50700);  // Default test values
     }
-
-        // Initial test
-        setFollowers(3524, 50700);  // Change this to whatever you want
-    </script>
+</script>
 </body>
 </html>
+
+
+
+
+
+
 
 
 
