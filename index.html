@@ -189,7 +189,7 @@
         let profileVisits = 500;
         let cashPerFollower = 0;
         let totalCash = 0;
-        let followerHistory = [3505, 3499, 3500, 3502, 3501, 3524,3528];
+        let followerHistory = [3505, 3499, 3500, 3502, 3501, 3524, 3528];
 
         // Function to update stats
         function updateStats() {
@@ -204,17 +204,17 @@
 
             totalCash = (followers * cashPerFollower).toFixed(2);
 
-            document.getElementById('followers').textContent = Followers: ${followers};
-            document.getElementById('profile-visits').textContent = Profile Visits: ${profileVisits};
-            document.getElementById('cashPerFollower').textContent = $${cashPerFollower};
-            document.getElementById('totalCash').textContent = $${totalCash};
-            document.getElementById('follower-group').textContent = Follower Group: ${getFollowerGroup(followers)};
+            // Correctly use template literals
+            document.getElementById('followers').textContent = `Followers: ${followers}`;
+            document.getElementById('profile-visits').textContent = `Profile Visits: ${profileVisits}`;
+            document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
+            document.getElementById('totalCash').textContent = `$${totalCash}`;
+            document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
 
             followerHistory.push(followers);
 
             updateChart(followerHistory);
         }
-
 
         // Function to get the follower group
         function getFollowerGroup(followers) {
@@ -282,6 +282,7 @@
     </script>
 </body>
 </html>
+
 
 
 
