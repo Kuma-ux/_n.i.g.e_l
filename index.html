@@ -183,107 +183,111 @@
         <p>Data provided by your Threads account. <a href="#">Learn more</a></p>
     </footer>
 
-    <script>
-        // Initial values for followers and profile visits
-        let followers = 3000;
-        let profileVisits = 500;
-        let cashPerFollower = 0;
-        let totalCash = 0;
-        let followerHistory = [3505, 3499, 3500, 3502, 3501, 3524, 3527];
+   <script>
+    // Initial values for followers and profile visits
+    let followers = parseInt(localStorage.getItem('followers')) || 3000; // Check localStorage for saved followers value
+    let profileVisits = parseInt(localStorage.getItem('profileVisits')) || 500; // Check localStorage for saved profileVisits value
+    let cashPerFollower = 0;
+    let totalCash = 0;
+    let followerHistory = JSON.parse(localStorage.getItem('followerHistory')) || [3505, 3499, 3500, 3502, 3501]; // Check localStorage for saved followerHistory value
 
-        // Function to update stats
-        function updateStats() {
-            if (followers > 0) {
-                cashPerFollower = (Math.log(followers + 1) * 0.12).toFixed(2);
-                const rewardMultiplier = 1 + Math.random() * 0.2;
-                cashPerFollower = (cashPerFollower * rewardMultiplier).toFixed(2);
-                cashPerFollower = Math.min(cashPerFollower, 12);
-            } else {
-                cashPerFollower = 0;
-            }
-
-            totalCash = (followers * cashPerFollower).toFixed(2);
-
-            document.getElementById('followers').textContent = Followers: ${followers};
-            document.getElementById('profile-visits').textContent = Profile Visits: ${profileVisits};
-            document.getElementById('cashPerFollower').textContent = $${cashPerFollower};
-            document.getElementById('totalCash').textContent = $${totalCash};
-            document.getElementById('follower-group').textContent = Follower Group: ${getFollowerGroup(followers)};
-
-            followerHistory.push(followers);
-
-            updateChart(followerHistory);
+    // Function to update stats
+    function updateStats() {
+        if (followers > 0) {
+            cashPerFollower = (Math.log(followers + 1) * 0.12).toFixed(2);
+            const rewardMultiplier = 1 + Math.random() * 0.2;
+            cashPerFollower = (cashPerFollower * rewardMultiplier).toFixed(2);
+            cashPerFollower = Math.min(cashPerFollower, 12);
+        } else {
+            cashPerFollower = 0;
         }
 
-        // Function to get the follower group
-        function getFollowerGroup(followers) {
-            let group = "Under 1 Million";
-            if (followers >= 1000000000) group = "Over 1 Billion";
-            else if (followers >= 500000000) group = "Under 1 Billion";
-            else if (followers >= 100000000) group = "Under 500 Million";
-            else if (followers >= 10000000) group = "Under 100 Million";
-            else if (followers >= 1000000) group = "Under 10 Million";
-            else if (followers >= 100000) group = "Under 1 Million";
-            return group;
-        }
+        totalCash = (followers * cashPerFollower).toFixed(2);
 
-        // Setup the chart using Chart.js
-        const ctx = document.getElementById('followersChart').getContext('2d');
-        const followersChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Followers Growth',
-                    data: [],
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'Time (days)'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Followers Count'
-                        }
+        document.getElementById('followers').textContent = `Followers: ${followers}`;
+        document.getElementById('profile-visits').textContent = `Profile Visits: ${profileVisits}`;
+        document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
+        document.getElementById('totalCash').textContent = `$${totalCash}`;
+        document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
+
+        // Update follower history and store it in localStorage
+        followerHistory.push(followers);
+        localStorage.setItem('followerHistory', JSON.stringify(followerHistory));
+
+        // Update the chart
+        updateChart(followerHistory);
+
+        // Save the current followers and profileVisits to localStorage
+        localStorage.setItem('followers', followers);
+        localStorage.setItem('profileVisits', profileVisits);
+    }
+
+    // Function to get the follower group
+    function getFollowerGroup(followers) {
+        let group = "Under 1 Million";
+        if (followers >= 1000000000) group = "Over 1 Billion";
+        else if (followers >= 500000000) group = "Under 1 Billion";
+        else if (followers >= 100000000) group = "Under 500 Million";
+        else if (followers >= 10000000) group = "Under 100 Million";
+        else if (followers >= 1000000) group = "Under 10 Million";
+        else if (followers >= 100000) group = "Under 1 Million";
+        return group;
+    }
+
+    // Setup the chart using Chart.js
+    const ctx = document.getElementById('followersChart').getContext('2d');
+    const followersChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Followers Growth',
+                data: [],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'Time (days)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Followers Count'
                     }
                 }
             }
-        });
-
-        // Update the chart with new data
-        function updateChart(followerHistory) {
-            followersChart.data.labels = Array.from({ length: followerHistory.length }, (_, index) => index + 1);
-            followersChart.data.datasets[0].data = followerHistory;
-            followersChart.update();
         }
+    });
 
-        // Example usage
-        function setFollowers(newFollowers, newProfileVisits) {
-            followers = newFollowers;
-            profileVisits = newProfileVisits;
-            updateStats();
-        }
+    // Update the chart with new data
+    function updateChart(followerHistory) {
+        followersChart.data.labels = Array.from({ length: followerHistory.length }, (_, index) => index + 1);
+        followersChart.data.datasets[0].data = followerHistory;
+        followersChart.update();
+    }
 
-        // Initial test
-        setFollowers(3528, 50700);  // Change this to whatever you want
-    </script>
+    // Example usage
+    function setFollowers(newFollowers, newProfileVisits) {
+        followers = newFollowers;
+        profileVisits = newProfileVisits;
+        updateStats();
+    }
+
+    // Initial test
+    setFollowers(3524, 50700);  // Change this to whatever you want
+</script>
 </body>
 </html>
-
-
-
 
 
 
