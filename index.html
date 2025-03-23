@@ -184,12 +184,11 @@
     </footer>
 
     <script>
-        // Initial values for followers and profile visits
         let followers = 3000;
         let profileVisits = 500;
         let cashPerFollower = 0;
         let totalCash = 0;
-        let followerHistory = [3505, 3499, 3500, 3502, 3501];
+        let followerHistory = [3505, 3499, 3500, 3502, 3501];  // Maintain historical data
 
         // Function to update stats
         function updateStats() {
@@ -204,14 +203,16 @@
 
             totalCash = (followers * cashPerFollower).toFixed(2);
 
-            document.getElementById('followers').textContent = Followers: ${followers};
-            document.getElementById('profile-visits').textContent = Profile Visits: ${profileVisits};
-            document.getElementById('cashPerFollower').textContent = $${cashPerFollower};
-            document.getElementById('totalCash').textContent = $${totalCash};
-            document.getElementById('follower-group').textContent = Follower Group: ${getFollowerGroup(followers)};
+            document.getElementById('followers').textContent = `Followers: ${followers}`;
+            document.getElementById('profile-visits').textContent = `Profile Visits: ${profileVisits}`;
+            document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
+            document.getElementById('totalCash').textContent = `$${totalCash}`;
+            document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
 
+            // Add the new data point to the history
             followerHistory.push(followers);
 
+            // Update the chart with new data
             updateChart(followerHistory);
         }
 
@@ -232,10 +233,10 @@
         const followersChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: [],
+                labels: Array.from({ length: followerHistory.length }, (_, index) => index + 1),  // Assign labels based on data length
                 datasets: [{
                     label: 'Followers Growth',
-                    data: [],
+                    data: followerHistory,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
                     fill: false
@@ -269,15 +270,15 @@
             followersChart.update();
         }
 
-        // Example usage
+        // Example usage of setFollowers
         function setFollowers(newFollowers, newProfileVisits) {
             followers = newFollowers;
             profileVisits = newProfileVisits;
             updateStats();
         }
 
-        // Initial test
-        setFollowers(3524, 50700);  // Change this to whatever you want
+        // Initial test call
+        setFollowers(3524, 50700);  // Change these values as needed
     </script>
 </body>
 </html>
