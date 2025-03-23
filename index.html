@@ -189,7 +189,6 @@
     let profileVisits = 500;
     let cashPerFollower = 0;
     let totalCash = 0;
-    let followerHistory = [3505, 3499, 3500, 3502, 3501];
 
     // Function to update stats
     function updateStats() {
@@ -210,13 +209,15 @@
         document.getElementById('totalCash').textContent = `$${totalCash}`;
         document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
 
-        // Save the cash values to localStorage for persistence
-        localStorage.setItem('cashPerFollower', cashPerFollower);
-        localStorage.setItem('totalCash', totalCash);
-
-        followerHistory.push(followers);
-
-        updateChart(followerHistory);
+        // Save data to the serverless function
+        fetch('/api/saveData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cashPerFollower, totalCash }),
+        }).then(response => response.json())
+          .then(data => console.log('Data saved:', data));
     }
 
     // Function to get the follower group
@@ -231,47 +232,22 @@
         return group;
     }
 
-    // Setup the chart using Chart.js
-    const ctx = document.getElementById('followersChart').getContext('2d');
-    const followersChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Followers Growth',
-                data: [],
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    type: 'linear',
-                    position: 'bottom',
-                    title: {
-                        display: true,
-                        text: 'Time (days)'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Followers Count'
-                    }
-                }
-            }
-        }
-    });
+    // Fetch saved data from the serverless function on page load
+    function loadSavedData() {
+        fetch('/api/saveData')
+            .then(response => response.json())
+            .then(data => {
+                cashPerFollower = data.cashPerFollower;
+                totalCash = data.totalCash;
 
-    // Update the chart with new data
-    function updateChart(followerHistory) {
-        followersChart.data.labels = Array.from({ length: followerHistory.length }, (_, index) => index + 1);
-        followersChart.data.datasets[0].data = followerHistory;
-        followersChart.update();
+                // Update the UI with the saved values
+                document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
+                document.getElementById('totalCash').textContent = `$${totalCash}`;
+            });
     }
+
+    // Initialize the page and load data on first load
+    window.onload = loadSavedData;
 
     // Example usage
     function setFollowers(newFollowers, newProfileVisits) {
@@ -279,29 +255,6 @@
         profileVisits = newProfileVisits;
         updateStats();
     }
-
-    // Initialize the page by checking for existing values in localStorage
-    function initializePage() {
-        // Retrieve cash values from localStorage
-        const savedCashPerFollower = localStorage.getItem('cashPerFollower');
-        const savedTotalCash = localStorage.getItem('totalCash');
-
-        // If there are saved values in localStorage, use them
-        if (savedCashPerFollower !== null && savedTotalCash !== null) {
-            cashPerFollower = savedCashPerFollower;
-            totalCash = savedTotalCash;
-
-            // Update the displayed values
-            document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
-            document.getElementById('totalCash').textContent = `$${totalCash}`;
-        }
-
-        // You can set your initial follower count here if needed
-        setFollowers(followers, profileVisits);
-    }
-
-    // Initialize the page when it loads
-    window.onload = initializePage;
 
     // Initial test
     setFollowers(3524, 50700);  // Change this to whatever you want
