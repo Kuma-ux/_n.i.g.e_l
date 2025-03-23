@@ -189,24 +189,31 @@
         let profileVisits = 500;
         let cashPerFollower = 0;
         let totalCash = 0;
-        let followerHistory = [3505, 3499, 3500, 3502, 3501, 3524];
+        let followerHistory = [3505, 3499, 3500, 3502, 3501, 3524,3528];
 
-       function updateStats() {
-    // Set cashPerFollower to a fixed value (e.g., $1.16 for everyone)
-    cashPerFollower = 1.16; // Fixed value for consistency across all users
+        // Function to update stats
+        function updateStats() {
+            if (followers > 0) {
+                cashPerFollower = (Math.log(followers + 1) * 0.12).toFixed(2);
+                const rewardMultiplier = 1 + Math.random() * 0.2;
+                cashPerFollower = (cashPerFollower * rewardMultiplier).toFixed(2);
+                cashPerFollower = Math.min(cashPerFollower, 12);
+            } else {
+                cashPerFollower = 0;
+            }
 
-    totalCash = (followers * cashPerFollower).toFixed(2);
+            totalCash = (followers * cashPerFollower).toFixed(2);
 
-    document.getElementById('followers').textContent = `Followers: ${followers}`;
-    document.getElementById('profile-visits').textContent = `Profile Visits: ${profileVisits}`;
-    document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
-    document.getElementById('totalCash').textContent = `$${totalCash}`;
-    document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
+            document.getElementById('followers').textContent = Followers: ${followers};
+            document.getElementById('profile-visits').textContent = Profile Visits: ${profileVisits};
+            document.getElementById('cashPerFollower').textContent = $${cashPerFollower};
+            document.getElementById('totalCash').textContent = $${totalCash};
+            document.getElementById('follower-group').textContent = Follower Group: ${getFollowerGroup(followers)};
 
-    followerHistory.push(followers);
+            followerHistory.push(followers);
 
-    updateChart(followerHistory);
-}
+            updateChart(followerHistory);
+        }
 
 
         // Function to get the follower group
@@ -271,7 +278,7 @@
         }
 
         // Initial test
-        setFollowers(3528, 50700);  // Change this to whatever you want
+        setFollowers(3530, 50700);  // Change this to whatever you want
     </script>
 </body>
 </html>
