@@ -272,23 +272,28 @@
         followersChart.update();
     }
 
-    // Example usage
-    function setFollowers(newFollowers, newProfileVisits) {
-        followers = newFollowers;
-        profileVisits = newProfileVisits;
-        updateStats();
-    }
-
     // Check if there's a stored cashPerFollower value in localStorage
     if (localStorage.getItem('cashPerFollower')) {
         // If we have a stored value, use it
         cashPerFollower = localStorage.getItem('cashPerFollower');
+        // Assuming that followers should be fetched or set here (from saved or default value).
+        followers = localStorage.getItem('followers') || 3000;  // Default followers if none is saved
+        profileVisits = localStorage.getItem('profileVisits') || 500; // Default profileVisits if none is saved
         updateStats();
     } else {
         // If there's no stored value, calculate it and store it
-        setFollowers(3524, 50700);  // Default test values
+        setFollowers(3524, 50700);  // Default test values (or you can remove this if you want)
     }
-</script>
+
+    // Function to set followers and profile visits
+    function setFollowers(newFollowers, newProfileVisits) {
+        followers = newFollowers;
+        profileVisits = newProfileVisits;
+        localStorage.setItem('followers', followers);
+        localStorage.setItem('profileVisits', profileVisits);
+        updateStats();
+    }
+  </script>
 </body>
 </html>
 
