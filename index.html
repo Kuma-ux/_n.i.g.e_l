@@ -189,7 +189,7 @@
     let profileVisits = 500;
     let cashPerFollower = 0;
     let totalCash = 0;
-    let followerHistory = [3505, 3499, 3500, 3502, 3501];
+    let followerHistory = [3505, 3499, 3500, 3502, 3501]; // Initial history of follower count
 
     // Function to update stats
     function updateStats() {
@@ -272,6 +272,26 @@
         followersChart.update();
     }
 
+    // Function to set followers and profile visits manually
+    function setFollowers() {
+        const newFollowers = parseInt(document.getElementById('followersInput').value, 10);
+        const newProfileVisits = parseInt(document.getElementById('profileVisitsInput').value, 10);
+        
+        if (isNaN(newFollowers) || isNaN(newProfileVisits)) {
+            alert("Please enter valid numbers for followers and profile visits.");
+            return;
+        }
+        
+        followers = newFollowers;
+        profileVisits = newProfileVisits;
+        
+        // Save these values to localStorage for persistence across sessions
+        localStorage.setItem('followers', followers);
+        localStorage.setItem('profileVisits', profileVisits);
+        
+        updateStats();
+    }
+
     // Check if there's a stored cashPerFollower value in localStorage
     if (localStorage.getItem('cashPerFollower')) {
         // If we have a stored value, use it
@@ -284,19 +304,9 @@
         // If there's no stored value, calculate it and store it
         setFollowers(3524, 50700);  // Default test values (or you can remove this if you want)
     }
-
-    // Function to set followers and profile visits
-    function setFollowers(newFollowers, newProfileVisits) {
-        followers = newFollowers;
-        profileVisits = newProfileVisits;
-        localStorage.setItem('followers', followers);
-        localStorage.setItem('profileVisits', profileVisits);
-        updateStats();
-    }
   </script>
 </body>
 </html>
-
 
 
 
