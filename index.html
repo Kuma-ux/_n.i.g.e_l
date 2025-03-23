@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Threads Account Stats</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
+     <style>
         * {
             margin: 0;
             padding: 0;
@@ -65,7 +65,6 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
-
         .metrics p {
             font-size: 1.1rem;
             margin: 12px 0;
@@ -89,7 +88,7 @@
             margin: 10px 0;
         }
 
-         #totalCash {
+        #totalCash {
             color: #FFD700;
         }
 
@@ -108,6 +107,7 @@
         footer a:hover {
             text-decoration: underline;
         }
+
         /* Media Queries for Mobile Screens */
         @media (max-width: 768px) {
             header h1 {
@@ -189,7 +189,7 @@
         let profileVisits = 500;
         let cashPerFollower = 0;
         let totalCash = 0;
-        let followerHistory = [3505, 3499, 3500, 3502, 3501, 3524];
+        let followerHistory = [3505, 3499, 3500, 3502, 3501];
 
         // Function to update stats
         function updateStats() {
@@ -204,12 +204,11 @@
 
             totalCash = (followers * cashPerFollower).toFixed(2);
 
-            // Correctly use template literals
-            document.getElementById('followers').textContent = `Followers: ${followers}`;
-            document.getElementById('profile-visits').textContent = `Profile Visits: ${profileVisits}`;
-            document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
-            document.getElementById('totalCash').textContent = `$${totalCash}`;
-            document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
+            document.getElementById('followers').textContent = Followers: ${followers};
+            document.getElementById('profile-visits').textContent = Profile Visits: ${profileVisits};
+            document.getElementById('cashPerFollower').textContent = $${cashPerFollower};
+            document.getElementById('totalCash').textContent = $${totalCash};
+            document.getElementById('follower-group').textContent = Follower Group: ${getFollowerGroup(followers)};
 
             followerHistory.push(followers);
 
@@ -278,7 +277,7 @@
         }
 
         // Initial test
-        setFollowers(3528, 50700);  // Change this to whatever you want
+        setFollowers(3524, 50700);  // Change this to whatever you want
     </script>
 </body>
 </html>
