@@ -24,7 +24,8 @@
 
         /* Styling for the chart container */
         .chart-container {
-            width: 90%; /* Allow the container to be 90% of the screen width */
+            width: 80%; /* Fixed width */
+            height: 400px; /* Fixed height */
             margin: auto;
             padding: 30px 0;
         }
@@ -34,7 +35,7 @@
             background-color: #1c1c1c;
             border-radius: 8px;
             width: 100% !important;  /* Ensure canvas takes up full container width */
-            height: auto !important; /* Let the height scale based on the width */
+            height: 100% !important; /* Fix the height so the graph has a fixed aspect ratio */
         }
 
         /* Style the chart legend and tooltips */
@@ -69,10 +70,9 @@
 
         /* Media Queries for responsiveness */
         @media screen and (max-width: 768px) {
-            /* Adjust the width of chart-container on smaller screens */
             .chart-container {
-                width: 95%; /* 95% for better scaling */
-                padding: 20px 0;
+                width: 90%; /* Adjust chart width on smaller screens */
+                height: 300px; /* Reduce the height for mobile */
             }
 
             /* Reduce the size of the title */
@@ -88,7 +88,11 @@
         }
 
         @media screen and (max-width: 480px) {
-            /* Further adjustments for very small screens like phones in portrait mode */
+            .chart-container {
+                width: 95%; /* Slightly increase width for very small screens */
+                height: 250px; /* Even smaller height for phones */
+            }
+
             h1 {
                 font-size: 20px;
                 margin-top: 20px;
@@ -137,7 +141,7 @@
                     backgroundColor: 'rgba(54, 162, 235, 0.6)', // Twitter color
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1,
-                    barThickness: 80  // Increased thickness of the bars
+                    barThickness: 50  // Adjusted to keep bars visually appealing
                 },
                 {
                     label: 'Twitter - Most Followed Person',
@@ -145,7 +149,7 @@
                     backgroundColor: 'rgba(54, 162, 235, 1)', // Twitter color
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1,
-                    barThickness: 80
+                    barThickness: 50
                 },
                 {
                     label: 'Threads - Users',
@@ -153,7 +157,7 @@
                     backgroundColor: 'rgba(255, 99, 132, 0.6)', // Threads color
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1,
-                    barThickness: 80
+                    barThickness: 50
                 },
                 {
                     label: 'Threads - Most Followed Person',
@@ -161,7 +165,7 @@
                     backgroundColor: 'rgba(255, 99, 132, 1)', // Threads color
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1,
-                    barThickness: 80
+                    barThickness: 50
                 },
                 {
                     label: 'Threads - _n.i.g.e_l',
@@ -169,7 +173,7 @@
                     backgroundColor: 'rgba(255, 99, 132, 0.8)', // Threads color for your account
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1,
-                    barThickness: 80
+                    barThickness: 50
                 }
             ]
         };
@@ -178,7 +182,7 @@
             type: 'bar',
             data: data,
             options: {
-                responsive: true,
+                responsive: false, // Prevent responsiveness to keep the same size
                 plugins: {
                     legend: {
                         position: 'top',
@@ -219,6 +223,7 @@
     </script>
 </body>
 </html>
+
 
 
 
