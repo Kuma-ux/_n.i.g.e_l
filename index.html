@@ -185,7 +185,7 @@
                 responsive: false, // Prevent responsiveness to keep the same size
                 plugins: {
                     legend: {
-                        position: 'top',
+                        position: 'bottom', // Move the legend to the bottom to avoid overlap with the chart
                         labels: {
                             color: '#fff' // Change legend text to white
                         }
@@ -197,6 +197,11 @@
                         titleColor: 'white',
                         bodyColor: 'white',
                     },
+                },
+                layout: {
+                    padding: {
+                        bottom: 30 // Add padding at the bottom to prevent the legend from intruding into the graph
+                    }
                 },
                 scales: {
                     x: {
@@ -223,6 +228,7 @@
     </script>
 </body>
 </html>
+
 
 
 
