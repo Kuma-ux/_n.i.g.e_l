@@ -3,289 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threads Account Stats</title>
+    <title>Social Media Users Comparison</title>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <style>
-        * {
+    <style>
+        /* Dark mode background for the whole page */
+        body {
+            background-color: #181818;
+            color: white;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #121212;
-            color: #E0E0E0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 10px; /* Prevents small screens from cutting off content */
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            background-color: #1E1E1E;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            padding: 30px;
+        h1 {
             text-align: center;
-            color: #E0E0E0;
-            margin-top: 20px;
-        }
-
-        header h1 {
-            font-size: 2rem; /* Use rem for scalability */
-            margin-bottom: 25px;
-            color: #F1F1F1;
-            font-weight: 600;
-        }
-
-        .profile-info {
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap; /* Allows stacking on small screens */
-        }
-
-        .profile-info .profile {
-            text-align: center;
-            margin-bottom: 20px; /* Adds spacing for mobile */
-        }
-
-        .profile-info .profile-photo {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #3E3E3E;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .metrics p {
-            font-size: 1.1rem;
-            margin: 12px 0;
-            font-weight: 500;
-        }
-
-        .chart-section {
-            margin-bottom: 35px;
-        }
-
-        .chart-section h2 {
-            font-size: 1.5rem;
-            color: #F1F1F1;
-            margin-bottom: 20px;
-        }
-
-        .cash-info p {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #00FF7F;
-            margin: 10px 0;
-        }
-
-        #totalCash {
-            color: #FFD700;
-        }
-
-        footer {
+            color: #f1f1f1;
             margin-top: 50px;
-            font-size: 0.9rem;
-            color: #8A8A8A;
         }
 
-        footer a {
-            text-decoration: none;
-            color: #FF79C6;
+        /* Styling for the chart container */
+        .chart-container {
+            width: 80%;
+            margin: auto;
+            padding: 30px 0;
+        }
+
+        /* Darker background for the canvas */
+        canvas {
+            background-color: #1c1c1c;
+            border-radius: 8px;
+            width: 100% !important;  /* Ensure canvas takes up full container width */
+            height: auto !important; /* Allow height to scale based on width */
+        }
+
+        /* Style the chart legend and tooltips */
+        .chartjs-legend {
+            color: white;
+            font-size: 14px;
+        }
+
+        .chartjs-tooltip {
+            background-color: #333;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        /* Cash calculation section */
+        .cash-container {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #f1f1f1;
+        }
+
+        .cash-container p {
+            margin: 10px;
+        }
+
+        .cash-container span {
             font-weight: bold;
+            color: #f39c12; /* A gold color for the cash values */
         }
 
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Media Queries for Mobile Screens */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.5rem; /* Smaller header font size on mobile */
+        /* Media Queries for responsiveness */
+        @media screen and (max-width: 768px) {
+            /* Adjust the width of chart-container on smaller screens */
+            .chart-container {
+                width: 95%;
+                padding: 20px 0;
             }
 
-            .profile-info {
-                flex-direction: column; /* Stack the profile and metrics sections */
-                align-items: center; /* Center-align on mobile */
+            /* Reduce the size of the title */
+            h1 {
+                font-size: 24px;
+                margin-top: 30px;
             }
 
-            .profile-info .profile {
-                margin-right: 0;
-                margin-bottom: 20px;
-            }
-
-            .metrics p {
-                font-size: 1rem; /* Slightly smaller text on mobile */
-            }
-
-            .chart-section h2 {
-                font-size: 1.2rem; /* Smaller chart section title */
-            }
-
-            .cash-info p {
-                font-size: 1.1rem; /* Smaller cash info text */
+            /* Make the cash calculation font size smaller for mobile */
+            .cash-container p {
+                font-size: 16px;
             }
         }
 
-        @media (max-width: 480px) {
-            .profile-info .profile-photo {
-                width: 100px;
-                height: 100px;
+        @media screen and (max-width: 480px) {
+            /* Further adjustments for very small screens like phones in portrait mode */
+            h1 {
+                font-size: 20px;
+                margin-top: 20px;
             }
 
-            .container {
-                padding: 15px; /* Less padding on smaller screens */
+            .cash-container p {
+                font-size: 14px;
             }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Nigel's Threads Account Stats</h1>
-        </header>
+<body class="dark-theme">
 
-        <section class="profile-info">
-            <div class="profile">
-                <img src="https://i.pinimg.com/736x/9d/63/ae/9d63ae8fc46133a1167e5116cef66a3d.jpg" alt="Profile Photo" class="profile-photo">
-                <p id="username">_n.i.g.e_l</p>
-            </div>
-
-            <div class="metrics">
-                <p id="followers">Followers: 0</p>
-                <p id="profile-visits">Profile Visits: 0</p>
-                <p id="follower-group">Follower Group: Under 1 Million</p>
-            </div>
-        </section>
-
-        <section class="chart-section">
-            <h2>Followers Growth</h2>
-            <canvas id="followersChart" width="400" height="200"></canvas>
-        </section>
-
-        <section class="cash-info">
-            <p>Cash per follower: $<span id="cashPerFollower">0.00</span></p>
-            <p>Total Cash: $<span id="totalCash">0.00</span></p>
-        </section>
+    <h1>Social Media Comparison: Twitter vs Threads</h1>
+    
+    <div class="chart-container">
+        <canvas id="userBarGraph"></canvas>
     </div>
 
-    <footer>
-        <p>Data provided by your Threads account. <a href="#">Learn more</a></p>
-    </footer>
+    <!-- Cash per Follower and Total Cash Section -->
+    <div class="cash-container">
+        <p>Cash per Follower: <span id="cashPerFollower">$1.10</span></p>
+        <p>Total Cash (Threads): <span id="totalCash">$3886.30</span></p>
+    </div>
 
-   <script>
-    // Initial values for followers and profile visits
-    let followers = parseInt(localStorage.getItem('followers')) || 3000; // Check localStorage for saved followers value
-    let profileVisits = parseInt(localStorage.getItem('profileVisits')) || 500; // Check localStorage for saved profileVisits value
-    let cashPerFollower = 0;
-    let totalCash = 0;
-    let followerHistory = JSON.parse(localStorage.getItem('followerHistory')) || [3505, 3499, 3500, 3502, 3501]; // Check localStorage for saved followerHistory value
+    <script>
+        // Cash per follower value
+        const cashPerFollower = 1.10; // Set your own value per follower
 
-    // Function to update stats
-    function updateStats() {
-        if (followers > 0) {
-            cashPerFollower = (Math.log(followers + 1) * 0.12).toFixed(2);
-            const rewardMultiplier = 1 + Math.random() * 0.2;
-            cashPerFollower = (cashPerFollower * rewardMultiplier).toFixed(2);
-            cashPerFollower = Math.min(cashPerFollower, 12);
-        } else {
-            cashPerFollower = 0;
-        }
+        // Your Thread's account followers count
+        const threadsFollowers = 3533;  // Replace with your Threads followers count
 
-        totalCash = (followers * cashPerFollower).toFixed(2);
+        // Calculate total cash based on your followers
+        const totalCash = threadsFollowers * cashPerFollower;
 
-        document.getElementById('followers').textContent = `Followers: ${followers}`;
-        document.getElementById('profile-visits').textContent = `Profile Visits: ${profileVisits}`;
-        document.getElementById('cashPerFollower').textContent = `$${cashPerFollower}`;
-        document.getElementById('totalCash').textContent = `$${totalCash}`;
-        document.getElementById('follower-group').textContent = `Follower Group: ${getFollowerGroup(followers)}`;
+        // Update the Total Cash displayed
+        document.getElementById('totalCash').textContent = `$${totalCash.toFixed(2)}`;
 
-        // Update follower history and store it in localStorage
-        followerHistory.push(followers);
-        localStorage.setItem('followerHistory', JSON.stringify(followerHistory));
-
-        // Update the chart
-        updateChart(followerHistory);
-
-        // Save the current followers and profileVisits to localStorage
-        localStorage.setItem('followers', followers);
-        localStorage.setItem('profileVisits', profileVisits);
-    }
-
-    // Function to get the follower group
-    function getFollowerGroup(followers) {
-        let group = "Under 1 Million";
-        if (followers >= 1000000000) group = "Over 1 Billion";
-        else if (followers >= 500000000) group = "Under 1 Billion";
-        else if (followers >= 100000000) group = "Under 500 Million";
-        else if (followers >= 10000000) group = "Under 100 Million";
-        else if (followers >= 1000000) group = "Under 10 Million";
-        else if (followers >= 100000) group = "Under 1 Million";
-        return group;
-    }
-
-    // Setup the chart using Chart.js
-    const ctx = document.getElementById('followersChart').getContext('2d');
-    const followersChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Followers Growth',
-                data: [],
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    type: 'linear',
-                    position: 'bottom',
-                    title: {
-                        display: true,
-                        text: 'Time (days)'
-                    }
+        // Data for the number of users and the most followed person on both platforms
+        const data = {
+            labels: ['Number of Users', 'Most Followed Person', '_n.i.g.e_l'],
+            datasets: [
+                {
+                    label: 'Twitter - Users',
+                    data: [650000000, 0, 0],  // Replace with actual Twitter user number
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)', // Twitter color
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    barThickness: 40
                 },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Followers Count'
+                {
+                    label: 'Twitter - Most Followed Person',
+                    data: [0, 219900000, 0],  // Replace with actual Twitter most followed person
+                    backgroundColor: 'rgba(54, 162, 235, 1)', // Twitter color
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    barThickness: 40
+                },
+                {
+                    label: 'Threads - Users',
+                    data: [320000000, 0, 0],  // Replace with actual Threads user number
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)', // Threads color
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    barThickness: 40
+                },
+                {
+                    label: 'Threads - Most Followed Person',
+                    data: [0, 21400000, 0],  // Replace with actual Threads most followed person
+                    backgroundColor: 'rgba(255, 99, 132, 1)', // Threads color
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    barThickness: 40
+                },
+                {
+                    label: 'Threads - _n.i.g.e_l',
+                    data: [0, 0, 3533],  // Your Threads followers
+                    backgroundColor: 'rgba(255, 99, 132, 0.8)', // Threads color for your account
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    barThickness: 40
+                }
+            ]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#fff' // Change legend text to white
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(50, 50, 50, 0.8)', // Darker tooltip background
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                    },
+                },
+                scales: {
+                    x: {
+                        stacked: false,
+                        ticks: {
+                            color: 'white' // Make x-axis labels white
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'white' // Make y-axis labels white
+                        }
                     }
                 }
             }
-        }
-    });
+        };
 
-    // Update the chart with new data
-    function updateChart(followerHistory) {
-        followersChart.data.labels = Array.from({ length: followerHistory.length }, (_, index) => index + 1);
-        followersChart.data.datasets[0].data = followerHistory;
-        followersChart.update();
-    }
-
-    // Example usage
-    function setFollowers(newFollowers, newProfileVisits) {
-        followers = newFollowers;
-        profileVisits = newProfileVisits;
-        updateStats();
-    }
-
-    // Initial test
-    setFollowers(3524, 50700);  // Change this to whatever you want
-</script>
+        // Initialize chart
+        const userBarGraph = new Chart(
+            document.getElementById('userBarGraph'),
+            config
+        );
+    </script>
 </body>
 </html>
 
